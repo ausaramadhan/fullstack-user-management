@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  name          String
+  password_hash String    // Specified as password_hash in PDF [cite: 80]
+  role          Role      @default(user)
+  created_by    String?
+  updated_by    String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  deleted_at    DateTime? // Required for Soft Delete [cite: 66]
+
+  @@map("users")
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  actor_id   Int?     // User performing the action
+  entity     String   // Table name (e.g., "User")
+  entity_id  Int?     // ID of the affected record
+  action     String   // CREATE, UPDATE, DELETE
+  before     Json?    // Data state before change
+  after      Json?    // Data state after change
+  created_at DateTime @default(now())
+
+  @@map("audit_logs")
+}

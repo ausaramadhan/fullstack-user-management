@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # 1. Database MySQL
+  db:
+    image: mysql:8.0
+    platform: linux/amd64 # Memastikan kompatibilitas di berbagai OS
+    container_name: fullstack_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fullstack_database
+    ports:
+      - "3307:3306" # Mapping ke port 3307 di komputer Anda (agar tidak bentrok dgn XAMPP)
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # 2. Redis Cache
+  redis:
+    image: redis:alpine
+    container_name: fullstack_redis
+    restart: always
+    ports:
+      - "6380:6379" # Mapping ke port 6380 (agar tidak bentrok dgn Redis lokal)
+
+  # 3. Backend API
+  backend:
+    build: ./backend
+    container_name: fullstack_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      # Koneksi DB mengarah ke service 'db', bukan localhost
+      DATABASE_URL: mysql://root:root@db:3306/fullstack_database
+      # Koneksi Redis mengarah ke service 'redis'
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: supersecret
+      REFRESH_SECRET: refreshsecret
+      PORT: 8000
+    depends_on:
+      - db
+      - redis
+
+  # 4. Frontend Next.js
+  frontend:
+    build: ./frontend
+    container_name: fullstack_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # Frontend mengakses Backend lewat URL publik (browser)
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+    depends_on:
+      - backend
+
+# Volume agar data database tidak hilang saat container dimatikan
+volumes:
+  db_data:

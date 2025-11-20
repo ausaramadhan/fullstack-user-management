@@ -1,0 +1,49 @@
+### ENVIRONMENT VARIABLES (Ganti dengan Token Anda)
+# Salin token dari hasil Request 1 (Login Admin) dan tempelkan di sini
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYzNjE0MDk1LCJleHAiOjE3NjM2MTc2OTV9.uEZAYjpujIvX19SAGOuk7RT4596WfLXZISsJC1wCe_E
+@baseUrl = http://localhost:8000
+@newUserId = 
+
+### 1. LOGIN ADMIN (Mendapatkan Token)
+# Jalankan ini untuk mendapatkan token baru jika yang di atas kedaluwarsa
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### 2. GET LIST USERS (Pagination, Cache, RBAC)
+# Uji pagination & Cache (jalankan 2x untuk melihat perbedaan kecepatan)
+GET {{baseUrl}}/api/users?page=1&limit=10&sortDir=desc
+Authorization: Bearer {{adminToken}}
+
+### 3. CREATE NEW USER (Soft Delete & Audit Log Test)
+# Uji Audit Log dan input validation
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Testing Create",
+  "username": "testingcreate",
+  "password": "password123",
+  "confirm_password": "password123",
+  "role": "user"
+}
+
+### 4. DELETE USER (Soft Delete & Admin Password Check)
+# Ganti <ID> dengan ID user yang berhasil dibuat di Request 3 (misalnya 5003)
+DELETE {{baseUrl}}/api/users/5003
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "confirm_password": "admin123"
+}
+
+### 5. EXPORT CSV
+# Uji fitur export data sesuai filter
+GET {{baseUrl}}/api/users/export?role=user&q=test
+Authorization: Bearer {{adminToken}}

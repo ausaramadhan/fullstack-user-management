@@ -1,0 +1,131 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Fullstack User Management API",
+      "version": "1.0.0",
+      "description": "API untuk mengelola data user, otentikasi, pagination, caching, audit, dan export CSV."
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8000/api",
+        "description": "Local Development Server"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "schemas": {
+        "LoginInput": {
+          "type": "object",
+          "properties": {
+            "username": { "type": "string" },
+            "password": { "type": "string" }
+          },
+          "required": ["username", "password"]
+        },
+        "CreateUserInput": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "username": { "type": "string" },
+            "password": { "type": "string" },
+            "confirm_password": { "type": "string" },
+            "role": { "type": "string", "enum": ["admin", "user"] }
+          },
+          "required": ["name", "username", "password", "confirm_password"]
+        },
+        "DeleteUserInput": {
+          "type": "object",
+          "properties": {
+            "confirm_password": { "type": "string" }
+          },
+          "required": ["confirm_password"]
+        }
+      }
+    },
+    "paths": {
+      "/auth/login": {
+        "post": {
+          "summary": "Login User",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginInput" }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Login berhasil, mengembalikan token & refresh token" }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "summary": "Mendapatkan Daftar User dengan Pagination & Filter (Admin Only)",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "in": "query", "name": "page", "schema": { "type": "integer" } },
+            { "in": "query", "name": "limit", "schema": { "type": "integer" } },
+            { "in": "query", "name": "q", "schema": { "type": "string" }, "description": "Search by name/username" },
+            { "in": "query", "name": "role", "schema": { "type": "string", "enum": ["admin", "user"] } }
+          ],
+          "responses": {
+            "200": { "description": "Daftar User dan metadata" }
+          }
+        },
+        "post": {
+          "summary": "Membuat User Baru (Admin Only)",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CreateUserInput" }
+              }
+            }
+          },
+          "responses": {
+            "201": { "description": "User berhasil dibuat dan Audit Log tercatat" }
+          }
+        }
+      },
+      "/users/{id}": {
+        "delete": {
+          "summary": "Soft Delete User (Admin Only, perlu konfirmasi password)",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteUserInput" }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "User berhasil di-soft delete dan Audit Log tercatat" }
+          }
+        }
+      },
+      "/users/export": {
+        "get": {
+          "summary": "Export Data User ke CSV (Admin Only)",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            { "in": "query", "name": "role", "schema": { "type": "string" } }
+          ],
+          "responses": {
+            "200": { "description": "Mengembalikan file CSV", "content": { "text/csv": {} } }
+          }
+        }
+      }
+    }
+  }

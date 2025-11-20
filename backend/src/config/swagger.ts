@@ -8,9 +8,7 @@ const options = {
       version: '1.0.0',
       description: 'Dokumentasi API untuk User Management System',
     },
-    servers: [
-      { url: `http://localhost:${process.env.PORT || 8000}/api` },
-    ],
+    servers: [{ url: `http://localhost:${process.env.PORT || 8000}/api` }],
     components: {
       securitySchemes: {
         BearerAuth: {
@@ -21,7 +19,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/routes/*.ts', './src/controllers/*.ts'], 
+  apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

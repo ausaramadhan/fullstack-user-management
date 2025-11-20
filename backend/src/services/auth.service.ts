@@ -9,14 +9,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 export const login = async (input: { username: string; password: string }) => {
   const { username, password } = input;
   const user = await prisma.user.findUnique({ where: { username } });
-  
+
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     throw new Error('username atau password salah');
   }
 
   const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '60m' });
   const refreshToken = crypto.randomUUID();
-  
+
   // Simpan refresh token di Redis (7 hari)
   await redis.set(`refresh_token:${refreshToken}`, user.id.toString(), 'EX', 7 * 24 * 60 * 60);
 
@@ -24,7 +24,7 @@ export const login = async (input: { username: string; password: string }) => {
     token,
     refreshToken,
     user: { id: user.id, name: user.name, role: user.role },
-    expiredAt: new Date(Date.now() + 60 * 60 * 1000).toISOString()
+    expiredAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
   };
 };
 
@@ -46,7 +46,7 @@ export const refreshToken = async (token: string) => {
   return {
     token: newToken,
     refreshToken: newRefreshToken,
-    expiredAt: new Date(Date.now() + 60 * 60 * 1000).toISOString()
+    expiredAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
   };
 };
 

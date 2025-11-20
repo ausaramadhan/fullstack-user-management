@@ -29,7 +29,7 @@ export default function LoginPage() {
     try {
       const response = await axios.post('http://localhost:8000/api/auth/login', {
         username,
-        password
+        password,
       });
 
       const { token, refreshToken, user } = response.data.data;
@@ -40,7 +40,6 @@ export default function LoginPage() {
 
       alert(`Login Berhasil! Selamat datang, ${user.name}`);
       router.push('/dashboard');
-
     } catch (error: any) {
       console.error('Login Error:', error);
       const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat login';
@@ -61,14 +60,10 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-3xl font-bold text-gray-900">
-          Login ke Aplikasi
-        </h2>
+        <h2 className="mb-6 text-center text-3xl font-bold text-gray-900">Login ke Aplikasi</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Username
-            </label>
+            <label className="mb-2 block text-sm font-medium text-gray-700">Username</label>
             <input
               type="text"
               required
@@ -79,9 +74,7 @@ export default function LoginPage() {
             />
           </div>
           <div className="mb-6">
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="mb-2 block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
               required

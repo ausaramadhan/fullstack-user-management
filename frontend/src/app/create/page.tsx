@@ -40,7 +40,7 @@ export default function CreateUserPage() {
     try {
       // Panggil API Backend via Axios Instance (Otomatis ada Token)
       await axiosInstance.post('/users', formData);
-      
+
       alert('User berhasil dibuat!');
       router.push('/dashboard'); // Kembali ke dashboard
     } catch (err: any) {
@@ -56,12 +56,8 @@ export default function CreateUserPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Tambah User Baru</h2>
-        
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
-            {error}
-          </div>
-        )}
+
+        {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}

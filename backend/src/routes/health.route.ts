@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   return res.json({
-    status: "ok",
+    status: 'ok',
     timestamp: new Date().toISOString(),
   });
 });

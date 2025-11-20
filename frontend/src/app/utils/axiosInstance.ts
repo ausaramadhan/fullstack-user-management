@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // 2. Response Interceptor: Handle Error 401 (Token Expired)
@@ -49,7 +49,6 @@ axiosInstance.interceptors.response.use(
 
         // Ulangi request awal
         return axiosInstance(originalRequest);
-
       } catch (refreshError) {
         // Jika refresh gagal juga (misal refresh token expired), paksa logout
         console.error('Session expired:', refreshError);
@@ -60,7 +59,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

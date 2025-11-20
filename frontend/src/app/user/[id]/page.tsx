@@ -14,7 +14,7 @@ export default function UserDetailPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -23,7 +23,7 @@ export default function UserDetailPage() {
 
   const [userMeta, setUserMeta] = useState({
     created_at: '',
-    updated_at: ''
+    updated_at: '',
   });
 
   useEffect(() => {
@@ -41,15 +41,14 @@ export default function UserDetailPage() {
         });
 
         setUserMeta({
-            created_at: userData.created_at,
-            updated_at: userData.updated_at
+          created_at: userData.created_at,
+          updated_at: userData.updated_at,
         });
-
       } catch (err: any) {
         console.error('Error fetching user:', err);
         setError('Gagal mengambil data user. User mungkin tidak ditemukan.');
         if (err.response?.status === 404) {
-            setTimeout(() => router.push('/dashboard'), 2000);
+          setTimeout(() => router.push('/dashboard'), 2000);
         }
       } finally {
         setLoading(false);
@@ -91,12 +90,14 @@ export default function UserDetailPage() {
   }
 
   if (error && !formData.name) {
-      return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 flex-col">
-            <p className="text-xl font-bold text-red-600 mb-4">{error}</p>
-            <Link href="/dashboard" className="text-blue-600 underline">Kembali ke Dashboard</Link>
-        </div>
-      )
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-100 flex-col">
+        <p className="text-xl font-bold text-red-600 mb-4">{error}</p>
+        <Link href="/dashboard" className="text-blue-600 underline">
+          Kembali ke Dashboard
+        </Link>
+      </div>
+    );
   }
 
   return (
@@ -113,22 +114,26 @@ export default function UserDetailPage() {
         </div>
 
         <div className="bg-white p-8 rounded-lg shadow-xl">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700 border-b pb-2">Informasi Pengguna</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700 border-b pb-2">
+            Informasi Pengguna
+          </h2>
 
           {error && (
             <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm border border-red-200">
               {error}
             </div>
           )}
-          
+
           <div className="mb-6 grid grid-cols-2 gap-4 text-sm text-gray-500 bg-gray-50 p-4 rounded">
             <div>
-                <strong>Dibuat pada:</strong><br/>
-                {userMeta.created_at ? new Date(userMeta.created_at).toLocaleString() : '-'}
+              <strong>Dibuat pada:</strong>
+              <br />
+              {userMeta.created_at ? new Date(userMeta.created_at).toLocaleString() : '-'}
             </div>
             <div>
-                <strong>Terakhir update:</strong><br/>
-                {userMeta.updated_at ? new Date(userMeta.updated_at).toLocaleString() : '-'}
+              <strong>Terakhir update:</strong>
+              <br />
+              {userMeta.updated_at ? new Date(userMeta.updated_at).toLocaleString() : '-'}
             </div>
           </div>
 
@@ -181,8 +186,8 @@ export default function UserDetailPage() {
             </div>
 
             <div className="p-3 bg-blue-50 text-blue-800 text-sm rounded border border-blue-100 flex items-center">
-                <span className="mr-2">ℹ️</span>
-                Password tidak dapat diubah di halaman ini.
+              <span className="mr-2">ℹ️</span>
+              Password tidak dapat diubah di halaman ini.
             </div>
 
             <button

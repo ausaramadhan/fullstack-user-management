@@ -1,9 +1,7 @@
 ﻿
-Markdown
-
 # User Management System - Fullstack Technical Test
 
-Aplikasi manajemen pengguna *end-to-end* yang dibangun menggunakan **Express.js** (Backend) dan **Next.js** (Frontend). Aplikasi ini menerapkan fitur keamanan tingkat lanjut seperti RBAC, Refresh Token Rotation, Audit Logging, serta optimasi performa menggunakan Redis Caching.
+Aplikasi manajemen pengguna *end-to-end* yang dibangun menggunakan **Express.js** (Backend) dan **Next.js** (Frontend). Aplikasi ini menerapkan fitur keamanan tingkat lanjut seperti RBAC, Refresh Token Rotation, Audit Logging, serta optimasi performa menggunakan Redis Caching. Seluruh lingkungan pengembangan **dikemas menggunakan Docker** untuk kemudahan deployment dan konsistensi.
 
 ## Tech Stack
 
@@ -21,20 +19,29 @@ Aplikasi manajemen pengguna *end-to-end* yang dibangun menggunakan **Express.js*
 - **Styling:** Tailwind CSS
 - **HTTP Client:** Axios (dengan Interceptors untuk Auto-Refresh Token)
 
+### DevOps & Infrastructure
+- **Containerization:** Docker
+- **Orchestration:** Docker Compose
+
+### Code Quality 
+- **Linter:** ESLint 
+- **Formatter:** Prettier 
+- **Command:** Jalankan `npm run lint` atau `npm run format` untuk mengecek kualitas kode.
+
 ---
 
-## 📋 Prasyarat
+##  Prasyarat
 
 Sebelum menjalankan aplikasi, pastikan Anda telah menginstal:
-- **Docker Desktop** (Direkomendasikan untuk setup instan)
+- **Docker Desktop** (Sangat Direkomendasikan untuk setup otomatis)
 - *Atau untuk setup manual:* Node.js v20+, MySQL (XAMPP), dan Redis Server.
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+##  Cara Menjalankan Aplikasi
 
 ### Metode 1: Menggunakan Docker (Direkomendasikan)
-Metode ini memenuhi kriteria *Acceptance Criteria* poin 7.
+Metode ini adalah cara tercepat dan memenuhi kriteria *Acceptance Criteria* poin 7.
 
 1. **Build dan Jalankan Container:**
    Buka terminal di root folder proyek dan jalankan:
@@ -43,16 +50,13 @@ Metode ini memenuhi kriteria *Acceptance Criteria* poin 7.
 
 _Tunggu hingga proses build selesai dan semua container (mysql, redis, backend, frontend) berjalan._
 
-2.  Migrasi Database & Seeding:
+2.  **Migrasi Database & Seeding:**
     
     Database di dalam Docker awalnya kosong. Jalankan perintah ini untuk membuat tabel dan mengisi data admin default:
     
-    Bash
-    
-    ```
+       ```Bash
     docker exec -it fullstack_backend npx prisma db push
     docker exec -it fullstack_backend npx prisma db seed
-    
     ```
     
 3.  **Akses Aplikasi:**
@@ -78,12 +82,8 @@ Jika Anda tidak menggunakan Docker, ikuti langkah ini:
     
 
 #### 2. Setup Backend
-
 ```Bash
 cd backend
-
-```
-
 # Install dependencies
 ```Bash 
 npm install
@@ -120,17 +120,9 @@ npm run dev
 
 Gunakan kredensial berikut untuk masuk sebagai **Super Admin**:
 
-**Username**
+**Username**  **Password**  **Role**
 
-**Password**
-
-**Role**
-
-`admin123`
-
-`admin123`
-
-**admin**
+`admin123`       `admin123`     **admin**
 
 _Catatan: User dummy lainnya juga tersedia dengan password `password123`._
 
@@ -138,21 +130,26 @@ _Catatan: User dummy lainnya juga tersedia dengan password `password123`._
 
 ##  Fitur Utama (Acceptance Criteria)
 
+
 Aplikasi ini telah memenuhi seluruh kriteria teknis:
 
-1.  **RBAC (Role-Based Access Control)**
+1.  **Dockerized Environment**
+    
+    -   Project berjalan sepenuhnya menggunakan `docker-compose` yang menyatukan Backend, Frontend, Database, dan Redis.
+        
+2.  **RBAC (Role-Based Access Control)**
     
     -   Middleware memastikan hanya Admin yang bisa melakukan CRUD penuh.
         
     -   User biasa dibatasi aksesnya.
         
-2.  **Redis Caching**
+3.  **Redis Caching**
     
     -   **List User:** Cache aktif (TTL 60s), filter/pagination memicu key cache unik.
         
     -   **Detail User:** Cache aktif, otomatis _invalidate_ (hapus) saat data di-update.
         
-3.  **Keamanan Token**
+4.  **Keamanan Token**
     
     -   Login menghasilkan **Access Token** (pendek) dan **Refresh Token** (panjang).
         
@@ -160,15 +157,15 @@ Aplikasi ini telah memenuhi seluruh kriteria teknis:
         
     -   Frontend memiliki _Interceptor_ otomatis untuk memperbarui token saat expired (401).
         
-4.  **Audit Logging**
+5.  **Audit Logging**
     
     -   Setiap aksi **CREATE**, **UPDATE**, dan **DELETE** dicatat di tabel `audit_logs` (MySQL).
         
-5.  **Export CSV**
+6.  **Export CSV**
     
     -   Fitur download data user dalam format CSV tersedia di Dashboard.
         
-6.  **Testing Coverage**
+7.  **Testing Coverage**
     
     -   Unit & Integration Test mencakup >80% kode backend.
         

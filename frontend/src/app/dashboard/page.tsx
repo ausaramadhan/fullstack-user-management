@@ -18,7 +18,7 @@ export default function DashboardPage() {
   // State Data
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // State Filter & Pagination
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState<'all' | 'admin' | 'user'>('all');
@@ -46,8 +46,8 @@ export default function DashboardPage() {
             q: searchTerm,
             role: roleParam,
             sortBy: sortKey,
-            sortDir: sortDirection
-          }
+            sortDir: sortDirection,
+          },
         });
 
         const { data, metadata } = response.data;
@@ -71,12 +71,12 @@ export default function DashboardPage() {
   // 2. Handler Logout
   const handleLogout = async () => {
     try {
-       const refreshToken = localStorage.getItem('refreshToken');
-       if (refreshToken) {
-          await axiosInstance.post('/auth/logout', { refreshToken });
-       }
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken) {
+        await axiosInstance.post('/auth/logout', { refreshToken });
+      }
     } catch (error) {
-      console.error("Logout error", error);
+      console.error('Logout error', error);
     } finally {
       localStorage.clear();
       router.push('/login');
@@ -85,17 +85,19 @@ export default function DashboardPage() {
 
   // 3. Handler Delete
   const handleDelete = async (id: number) => {
-    const password = window.prompt(`PENTING: Masukkan Password Admin Anda untuk menghapus User ID ${id}:`);
-    
+    const password = window.prompt(
+      `PENTING: Masukkan Password Admin Anda untuk menghapus User ID ${id}:`,
+    );
+
     if (!password) return;
 
     try {
       await axiosInstance.delete(`/users/${id}`, {
-        data: { confirm_password: password }
+        data: { confirm_password: password },
       });
-      
+
       alert('User berhasil dihapus!');
-      setUsers(prev => prev.filter(u => u.id !== id));
+      setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (error: any) {
       const msg = error.response?.data?.message || 'Gagal menghapus user';
       alert(`Gagal: ${msg}`);
@@ -107,9 +109,9 @@ export default function DashboardPage() {
     try {
       const roleParam = filterRole !== 'all' ? filterRole : undefined;
       const response = await axiosInstance.get('/users/export', {
-        params: { 
-            role: roleParam,
-            q: searchTerm 
+        params: {
+          role: roleParam,
+          q: searchTerm,
         },
         responseType: 'blob',
       });
@@ -122,8 +124,8 @@ export default function DashboardPage() {
       link.click();
       link.remove();
     } catch (error) {
-      console.error("Export error", error);
-      alert("Gagal export CSV");
+      console.error('Export error', error);
+      alert('Gagal export CSV');
     }
   };
 
@@ -150,10 +152,16 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
         <h1 className="text-3xl font-bold text-gray-800">Manajemen Pengguna</h1>
         <div className="flex space-x-3">
-          <Link href="/create" className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition">
+          <Link
+            href="/create"
+            className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition"
+          >
             + Tambah User Baru
           </Link>
-          <button onClick={handleLogout} className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition">
+          <button
+            onClick={handleLogout}
+            className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition"
+          >
             Logout
           </button>
         </div>
@@ -169,7 +177,7 @@ export default function DashboardPage() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1); 
+                setCurrentPage(1);
               }}
               className="rounded-md border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
             />
@@ -186,9 +194,12 @@ export default function DashboardPage() {
               <option value="user">User</option>
             </select>
           </div>
-          
-          <button onClick={handleExport} className="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700">
-             Download CSV
+
+          <button
+            onClick={handleExport}
+            className="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+          >
+            Download CSV
           </button>
         </div>
 
@@ -197,20 +208,35 @@ export default function DashboardPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th onClick={() => handleSort('id')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                <th
+                  onClick={() => handleSort('id')}
+                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
                   ID {sortIndicator('id')}
                 </th>
-                <th onClick={() => handleSort('name')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                <th
+                  onClick={() => handleSort('name')}
+                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
                   Name {sortIndicator('name')}
                 </th>
-                <th onClick={() => handleSort('username')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                <th
+                  onClick={() => handleSort('username')}
+                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
                   Username {sortIndicator('username')}
                 </th>
-                <th onClick={() => handleSort('role')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                <th
+                  onClick={() => handleSort('role')}
+                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
                   Role {sortIndicator('role')}
                 </th>
-                <th onClick={() => handleSort('created_at')} className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                   Created At {sortIndicator('created_at')}
+                <th
+                  onClick={() => handleSort('created_at')}
+                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                >
+                  Created At {sortIndicator('created_at')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                   Actions
@@ -219,30 +245,46 @@ export default function DashboardPage() {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {loading ? (
-                 <tr><td colSpan={6} className="text-center py-4 text-black">Loading data...</td></tr>
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-black">
+                    Loading data...
+                  </td>
+                </tr>
               ) : users.length === 0 ? (
-                 <tr><td colSpan={6} className="text-center py-4 text-black">Tidak ada data ditemukan.</td></tr>
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-black">
+                    Tidak ada data ditemukan.
+                  </td>
+                </tr>
               ) : (
-                users.map(user => (
+                users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 text-sm text-gray-900">{user.id}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-500">{user.username}</td>
                     <td className="px-6 py-4 text-sm">
-                      <span className={`rounded-full px-2 py-1 text-xs font-semibold ${user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                      <span
+                        className={`rounded-full px-2 py-1 text-xs font-semibold ${user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
+                      >
                         {user.role}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                        {new Date(user.created_at).toLocaleDateString()}
+                      {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                       {/* TOMBOL EDIT */}
-                      <Link href={`/user/${user.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4 font-bold">
+                      <Link
+                        href={`/user/${user.id}`}
+                        className="text-indigo-600 hover:text-indigo-900 mr-4 font-bold"
+                      >
                         Edit
                       </Link>
                       {/* TOMBOL DELETE */}
-                      <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:text-red-900 font-bold">
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="text-red-600 hover:text-red-900 font-bold"
+                      >
                         Delete
                       </button>
                     </td>
@@ -260,14 +302,14 @@ export default function DashboardPage() {
           </p>
           <div className="flex space-x-2">
             <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
               className="px-3 py-1 border rounded bg-white text-gray-600 disabled:opacity-50"
             >
               Previous
             </button>
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-3 py-1 border rounded bg-white text-gray-600 disabled:opacity-50"
             >

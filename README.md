@@ -1,5 +1,5 @@
 ﻿
-# User Management System - Fullstack Technical Test
+# User Management System - Fullstack Developer CRUD
 
 Aplikasi manajemen pengguna *end-to-end* yang dibangun menggunakan **Express.js** (Backend) dan **Next.js** (Frontend). Aplikasi ini menerapkan fitur keamanan tingkat lanjut seperti RBAC, Refresh Token Rotation, Audit Logging, serta optimasi performa menggunakan Redis Caching. Seluruh lingkungan pengembangan **dikemas menggunakan Docker** untuk kemudahan deployment dan konsistensi.
 
